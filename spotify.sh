@@ -12,10 +12,11 @@ if ! pgrep -xq -- "Spotify"; then
 	open -a Spotify -jg
 fi
 
-URI=$(curl -G -X "GET" "https://api.spotify.com/v1/search" --data-urlencode "q=$*" --data-urlencode "type=track" -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer $SPOTIFY_TOKEN" | jq -r '.tracks.items | first | .uri')
+data=$(curl -G -X "GET" "https://api.spotify.com/v1/search" --data-urlencode "q=$*" --data-urlencode "type=track" -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: Bearer $SPOTIFY_TOKEN" | jq -r '.tracks.items | first')
 
-echo "URI is: $URI"
+artist=$(jq -r '.artists | first' <<< $data)
+track=$(jq -r '{ name: .name, uri: .uri }' <<< $data)
 
-osascript -e 'tell application "Spotify"' -e 'play track "'"$URI"'"' -e 'end tell'
+osascript -e 'tell application "Spotify"' -e 'play track "'"$(jq -r '.uri' <<< $track)"'"' -e 'end tell'
 
-echo "Now playing: $*"
+echo "Now playing: $(jq -r '.name' <<< $artist) - $(jq -r '.name' <<< $track)"
