@@ -8,7 +8,7 @@
 
 source ./secrets.sh
 
-if ! pgrep -xq -- "Spotify"; then
+if ! $(bash ./helpers/is-app-running spotify); then
 	open -a Spotify -jg
 fi
 
