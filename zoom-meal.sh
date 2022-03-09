@@ -7,4 +7,4 @@
 
 source ./secrets.sh
 
-bash ./helpers/open-chrome.sh $BREAKOUT_GROCERY_ZOOM_URL
+bash ./helpers/open-chrome.sh $BREAKOUT_ZOOM_URL
